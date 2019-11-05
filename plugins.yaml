@@ -1,0 +1,4 @@
+plugins:
+  azkaoru/test-prow:
+  - size
+  - trigger

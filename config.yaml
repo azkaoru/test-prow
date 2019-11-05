@@ -1,0 +1,33 @@
+postsubmits:
+  azkaoru/test-prow:
+  - name: test-postsubmit
+    agent: kubernetes
+    spec:
+      containers:
+      - image: alpine
+        command: ["/bin/printenv"]
+  - name: test-oc
+    agent: kubernetes
+    spec:
+      containers:
+      - image: quay.io/openshift-pipeline/openshift-cli:0.5.0
+        command: ["/usr/local/bin/oc","--kubeconfig","/etc/foo/kubeconfig","get","project"]
+        volumeMounts:
+        - mountPath: /etc/foo
+          name: kubeconfig
+          readOnly: true
+      volumes:
+      - name: kubeconfig
+        secret:
+          defaultMode: 420
+          secretName: kubeconfig-secret
+presubmits:
+  azkaoru/test-prow:
+  - name: unit-test
+    agent: kubernetes
+    always_run: false
+    skip_report: false
+    spec:
+      containers:
+      - image: alpine
+        command: ["/bin/printenv"]
